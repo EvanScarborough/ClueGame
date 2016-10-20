@@ -20,6 +20,10 @@ public class Board {
 	private static String boardConfigFile;
 	private static String roomConfig;
 	
+	public Solution theAnswer;
+	public ArrayList<Player> players;
+	public ArrayList<Card> cards;
+	
 	public static int MAX_BOARD_SIZE = 0;
 
 	private Board() {}
@@ -41,10 +45,15 @@ public class Board {
 			Scanner scLayout = new Scanner(fileinLayout);
 			Scanner scLegend = new Scanner(fileinLegend);
 			
+			cards = new ArrayList<Card>();
+			
 			while (scLegend.hasNextLine()) {
 				String str = scLegend.nextLine();
 				String[] lineArray = str.split(", ");
 				Board.rooms.put(lineArray[0].charAt(0), lineArray[1]);
+				if(lineArray[2].equals("Card")){
+					cards.add(new Card(lineArray[1],CardType.ROOM));
+				}
 			}
 			scLegend.close();
 			
@@ -224,5 +233,21 @@ public class Board {
 
 	public void calcTargets(int i, int j, int k) {
 		calcTargets(board[i][j],k);
+	}
+
+	public void selectAnswer(){
+		
+	}
+	
+	public Card handleSuggestion(){
+		return null;
+	}
+	
+	public boolean checkAccusation(Solution accusation){
+		return false;
+	}
+	
+	public void loadConfigFiles(String playerFile, String weaponFile){
+		
 	}
 }
