@@ -1,0 +1,11 @@
+X, Closet, Other
+W, Walkway, Other
+B, Bedroom, Card
+M, Movie room, Card
+L, Lounge, Card
+O, Office, Card
+S, Server room, Card
+K, Kitchen, Card
+R, Sun room, Card
+P, Pool, Card
+G, Garage, Card
