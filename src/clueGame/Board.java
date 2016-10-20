@@ -3,6 +3,7 @@ package clueGame;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -248,6 +249,74 @@ public class Board {
 	}
 	
 	public void loadConfigFiles(String playerFile, String weaponFile){
+		players = new ArrayList<Player>();
+		try {
+			File pFile = new File(playerFile);
+			File wFile = new File(weaponFile);
+			Scanner pfin = new Scanner(pFile);
+			Scanner wfin = new Scanner(wFile);
+			
+			for(int i = 0; i < 6; i++){
+				String n = pfin.nextLine();
+				players.add(new Player(n));
+				cards.add(new Card(n,CardType.PERSON));
+			}
+			for(int i = 0; i < 6; i++){
+				String c = pfin.nextLine();
+				String[] rgb = c.split(" ");
+				players.get(i).setColor(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
+			}
+			for(int i = 0; i < 6; i++){
+				String p = pfin.nextLine();
+				String[] yx = p.split(" ");
+				players.get(i).setPosition(Integer.parseInt(yx[0]), Integer.parseInt(yx[1]));
+			}
+			while(wfin.hasNextLine()) {
+				String w = wfin.nextLine();
+				cards.add(new Card(w,CardType.WEAPON));
+			}
+			
+		}catch(FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void dealCards(){
+		Collections.shuffle(cards);
+		Collections.shuffle(cards);
+		theAnswer = new Solution("","","");
+		int room = -1;
+		int person = -1;
+		int weapon = -1;
+		for(int i = 0; i < cards.size(); i++){
+			switch(cards.get(i).getType()){
+			case ROOM:
+				room = i;
+				break;
+			case PERSON:
+				person = i;
+				break;
+			case WEAPON:
+				weapon = i;
+				break;
+			}
+		}
+		theAnswer.person = cards.get(person).getName();
+		theAnswer.room = cards.get(room).getName();
+		theAnswer.weapon = cards.get(weapon).getName();
+		cards.remove(person);
+		if(room > person) room--;
+		if(weapon > person) weapon--;
+		cards.remove(room);
+		if(weapon > room) weapon--;
+		cards.remove(weapon);
+		//System.out.println(theAnswer.person + " " + theAnswer.weapon + " " + theAnswer.room);
 		
+		int pgive = 0;
+		while(cards.size() > 0){
+			players.get(pgive % 6).giveCard(cards.get(0));
+			cards.remove(0);
+			pgive++;
+		}
 	}
 }

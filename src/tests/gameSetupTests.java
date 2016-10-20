@@ -77,6 +77,7 @@ public class gameSetupTests {
 	
 	@Test
 	public void testDealCards(){
+		board.dealCards();
 		//Tests if all cards have been dealt
 		assertTrue(board.cards.size() == 0);
 		ArrayList<Integer> numCards = new ArrayList<Integer>();
@@ -89,6 +90,7 @@ public class gameSetupTests {
 			//Checks that no cards are repeated
 			for(Card c: board.players.get(i).getMyCards()){
 				if(found.contains(c.getName())){
+					System.out.println(c.getName());
 					assertTrue(false);
 				}
 				found.add(c.getName());
