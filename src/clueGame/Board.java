@@ -25,6 +25,10 @@ public class Board {
 	public ArrayList<Player> players;
 	public ArrayList<Card> cards;
 	
+	public static ArrayList<Card> weaponCards;
+	public static ArrayList<Card> peopleCards;
+	public static ArrayList<Card> roomCards;
+	
 	public static int MAX_BOARD_SIZE = 0;
 
 	private Board() {}
@@ -40,6 +44,9 @@ public class Board {
 	}
 	
 	public void initialize() {
+		peopleCards = new ArrayList<Card>();
+		roomCards = new ArrayList<Card>();
+		weaponCards = new ArrayList<Card>();
 		try {
 			File fileinLayout = new File(boardConfigFile);
 			File fileinLegend = new File(roomConfig);
@@ -53,7 +60,8 @@ public class Board {
 				String[] lineArray = str.split(", ");
 				Board.rooms.put(lineArray[0].charAt(0), lineArray[1]);
 				if(lineArray[2].equals("Card")){
-					cards.add(new Card(lineArray[1],CardType.ROOM));
+					roomCards.add(new Card(lineArray[1],CardType.ROOM));
+					cards.add(roomCards.get(roomCards.size()-1));
 				}
 			}
 			scLegend.close();
@@ -240,7 +248,8 @@ public class Board {
 		
 	}
 	
-	public Card handleSuggestion(){
+	public Card handleSuggestion(int playerIndex, Solution s){
+		
 		return null;
 	}
 	
@@ -250,6 +259,7 @@ public class Board {
 	
 	public void loadConfigFiles(String playerFile, String weaponFile){
 		players = new ArrayList<Player>();
+		
 		try {
 			File pFile = new File(playerFile);
 			File wFile = new File(weaponFile);
@@ -258,8 +268,10 @@ public class Board {
 			
 			for(int i = 0; i < 6; i++){
 				String n = pfin.nextLine();
-				players.add(new Player(n));
-				cards.add(new Card(n,CardType.PERSON));
+				if(i!=0)players.add(new ComputerPlayer(n));
+				else players.add(new HumanPlayer(n));
+				peopleCards.add(new Card(n,CardType.PERSON));
+				cards.add(peopleCards.get(peopleCards.size()-1));
 			}
 			for(int i = 0; i < 6; i++){
 				String c = pfin.nextLine();
@@ -273,7 +285,8 @@ public class Board {
 			}
 			while(wfin.hasNextLine()) {
 				String w = wfin.nextLine();
-				cards.add(new Card(w,CardType.WEAPON));
+				weaponCards.add(new Card(w,CardType.WEAPON));
+				cards.add(weaponCards.get(weaponCards.size()-1));
 			}
 			
 		}catch(FileNotFoundException e) {
@@ -284,6 +297,7 @@ public class Board {
 	public void dealCards(){
 		Collections.shuffle(cards);
 		Collections.shuffle(cards);
+		System.out.println("cat");
 		theAnswer = new Solution("","","");
 		int room = -1;
 		int person = -1;

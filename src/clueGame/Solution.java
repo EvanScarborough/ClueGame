@@ -10,4 +10,8 @@ public class Solution {
 		room = r;
 		weapon = w;
 	}
+	
+	public boolean isSame(Solution s) {
+		return person == s.person && room == s.room && weapon == s.weapon;
+	}
 }

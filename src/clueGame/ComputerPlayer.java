@@ -3,6 +3,8 @@ package clueGame;
 import java.util.Set;
 
 public class ComputerPlayer extends Player{
+	public char lastVisited = '-';
+	
 	public ComputerPlayer(String name) {
 		super(name);
 	}
@@ -11,11 +13,11 @@ public class ComputerPlayer extends Player{
 		return null;
 	}
 	
-	public void makeAccusation(){
-		
+	public Solution makeAccusation(){
+		return null;
 	}
 	
-	public void createSuggestion(){
-		
+	public Solution createSuggestion(){
+		return null;
 	}
 }
