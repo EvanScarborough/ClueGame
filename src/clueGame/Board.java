@@ -14,7 +14,7 @@ public class Board {
 	private static Board theInstance = new Board();
 	private static int numRows, numColumns;
 	private static BoardCell[][] board;
-	private static Map<Character, String> rooms;
+	static Map<Character, String> rooms;
 	private static Map<BoardCell, HashSet<BoardCell>> adjMatrix;
 	private static HashSet<BoardCell> targets = new HashSet<BoardCell>();
 	private static HashSet<BoardCell> visited = new HashSet<BoardCell>();
@@ -249,11 +249,20 @@ public class Board {
 	}
 	
 	public Card handleSuggestion(int playerIndex, Solution s){
-		
+		//System.out.println("Start at " + playerIndex);
+		for(int i = playerIndex + 1; i < playerIndex + 6; i++) {
+			int index = i % 6;
+			//System.out.println(index);
+			Card c = players.get(index).disproveSuggestion(s);
+			if (c != null) {
+				return c;
+			}
+		}
 		return null;
 	}
 	
 	public boolean checkAccusation(Solution accusation){
+		if(theAnswer.isSame(accusation)) return true;
 		return false;
 	}
 	
@@ -297,7 +306,7 @@ public class Board {
 	public void dealCards(){
 		Collections.shuffle(cards);
 		Collections.shuffle(cards);
-		System.out.println("cat");
+		//System.out.println("cat");
 		theAnswer = new Solution("","","");
 		int room = -1;
 		int person = -1;

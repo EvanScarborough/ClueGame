@@ -12,6 +12,6 @@ public class Solution {
 	}
 	
 	public boolean isSame(Solution s) {
-		return person == s.person && room == s.room && weapon == s.weapon;
+		return person.contains(s.person) && room.contains(s.room) && weapon.contains(s.weapon);
 	}
 }

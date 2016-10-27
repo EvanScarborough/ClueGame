@@ -1,19 +1,34 @@
 package clueGame;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
 public class Player {
-	private String playerName;
-	private int row;
-	private int column;
-	private Color color;
+	protected String playerName;
+	protected int row;
+	protected int column;
+	protected Color color;
 	
-	private Set<Card> myCards;
+	protected Set<Card> myCards;
 	
 	public Card disproveSuggestion(Solution suggestion){
-		return null;
+		ArrayList<Card> randoReturn = new ArrayList<Card>();
+		
+		for(Card c: myCards){
+			if(c.getName().equals(suggestion.person)||c.getName().equals(suggestion.room)||c.getName().equals(suggestion.weapon)) randoReturn.add(c);
+		}
+		
+		
+		if (randoReturn.size() == 0) return null;
+		
+		Random rand = new Random();
+		
+		return randoReturn.get(rand.nextInt(randoReturn.size()));
 	}
 	
 	public Player(String name){

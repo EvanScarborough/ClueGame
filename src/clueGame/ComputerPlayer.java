@@ -1,5 +1,8 @@
 package clueGame;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 public class ComputerPlayer extends Player{
@@ -10,14 +13,47 @@ public class ComputerPlayer extends Player{
 	}
 
 	public BoardCell pickLocation(Set<BoardCell> targets){
+		Set<BoardCell> rooms = new HashSet<BoardCell>();
+		Random rand = new Random();
+		for(BoardCell c: targets){
+			//System.out.println(c.Row() + "  " + c.Column());
+			if(c.isDoorway() && c.getInitial() != lastVisited){
+				rooms.add(c);
+				//System.out.println("jfalksjdfklajsdklfjaksldjflkasjdf");
+			}
+		}
+		if(rooms.size() == 0){
+			int randomIndex = rand.nextInt(targets.size());
+			for(BoardCell c: targets){
+				if(randomIndex == 0) return c;
+				randomIndex--;
+			}
+		}
+		int randomIndex = rand.nextInt(rooms.size());
+		for(BoardCell c: rooms){
+			if(randomIndex == 0) return c;
+			randomIndex--;
+		}
 		return null;
 	}
 	
 	public Solution makeAccusation(){
 		return null;
 	}
-	
+
 	public Solution createSuggestion(){
-		return null;
+		Board board = Board.getInstance();
+		ArrayList<Card> people = new ArrayList<Card>();
+		for(Card c: Board.peopleCards){
+			if(!myCards.contains(c)) people.add(c);
+		}
+		ArrayList<Card> weapons = new ArrayList<Card>();
+		for(Card c: Board.weaponCards){
+			if(!myCards.contains(c)) weapons.add(c);
+		}
+		Random rand = new Random();
+		String roomsug = board.rooms.get(board.getCell(row, column).getInitial());
+		//System.out.println(roomsug);
+		return new Solution(people.get(rand.nextInt(people.size())).getName(),roomsug,weapons.get(rand.nextInt(weapons.size())).getName());
 	}
 }
