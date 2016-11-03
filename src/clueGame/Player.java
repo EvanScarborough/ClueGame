@@ -19,16 +19,15 @@ public class Player {
 	public Card disproveSuggestion(Solution suggestion){
 		ArrayList<Card> randoReturn = new ArrayList<Card>();
 		
-		for(Card c: myCards){
+		for(Card c: myCards){ //Add cards that can disprove into an arraylist
 			if(c.getName().equals(suggestion.person)||c.getName().equals(suggestion.room)||c.getName().equals(suggestion.weapon)) randoReturn.add(c);
 		}
 		
-		
-		if (randoReturn.size() == 0) return null;
+		if (randoReturn.size() == 0) return null; //Can't disprove anything
 		
 		Random rand = new Random();
 		
-		return randoReturn.get(rand.nextInt(randoReturn.size()));
+		return randoReturn.get(rand.nextInt(randoReturn.size())); //Return a random card that can disprove.
 	}
 	
 	public Player(String name){
