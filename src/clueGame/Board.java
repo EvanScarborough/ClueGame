@@ -308,6 +308,8 @@ public class Board {
 		Collections.shuffle(cards);
 		//System.out.println("cat");
 		theAnswer = new Solution("","","");
+		
+		
 		int room = -1;
 		int person = -1;
 		int weapon = -1;
