@@ -317,39 +317,13 @@ public class Board {
 	public void dealCards(){
 		Collections.shuffle(cards);
 		Collections.shuffle(cards);
-		//System.out.println("cat");
-		
-		
-		
-		int room = -1;
-		int person = -1;
-		int weapon = -1;
-		for(int i = 0; i < cards.size(); i++){
-			switch(cards.get(i).getType()){
-			case ROOM:
-				room = i;
-				break;
-			case PERSON:
-				person = i;
-				break;
-			case WEAPON:
-				weapon = i;
-				break;
-			}
-		}
-		theAnswer.person = cards.get(person).getName();
-		theAnswer.room = cards.get(room).getName();
-		theAnswer.weapon = cards.get(weapon).getName();
-		cards.remove(person);
-		if(room > person) room--;
-		if(weapon > person) weapon--;
-		cards.remove(room);
-		if(weapon > room) weapon--;
-		cards.remove(weapon);
-		//System.out.println(theAnswer.person + " " + theAnswer.weapon + " " + theAnswer.room);
 		
 		int pgive = 0;
 		while(cards.size() > 0){
+			if (theAnswer.person == cards.get(0).getName() || theAnswer.room == cards.get(0).getName() || theAnswer.weapon == cards.get(0).getName()) {
+				cards.remove(0);
+				continue;
+			}
 			players.get(pgive % 6).giveCard(cards.get(0));
 			cards.remove(0);
 			pgive++;
