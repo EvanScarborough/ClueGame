@@ -89,18 +89,21 @@ public class Board {
 						board[i][j].setType(BoardCell.CellType.DOORWAY);
 						if (cellTypes.get(cellNum).charAt(1) == 'U') {
 							board[i][j].setDoorDirection(DoorDirection.UP);
-						} else if (cellTypes.get(cellNum).charAt(1) == 'R') {
-							board[i][j].setDoorDirection(DoorDirection.RIGHT);
-						} else if (cellTypes.get(cellNum).charAt(1) == 'D') {
-							board[i][j].setDoorDirection(DoorDirection.DOWN);
-						} else if (cellTypes.get(cellNum).charAt(1) == 'L') {
-							board[i][j].setDoorDirection(DoorDirection.LEFT);
-						} else if (cellTypes.get(cellNum).charAt(1) == 'N'){
-							board[i][j].setType(BoardCell.CellType.ROOM);
 						}
-					} else if (cellTypes.get(cellNum).charAt(0) == 'W') {
+						else if (cellTypes.get(cellNum).charAt(1) == 'R') {
+							board[i][j].setDoorDirection(DoorDirection.RIGHT);
+						}
+						else if (cellTypes.get(cellNum).charAt(1) == 'D') {
+							board[i][j].setDoorDirection(DoorDirection.DOWN);
+						}
+						else if (cellTypes.get(cellNum).charAt(1) == 'L') {
+							board[i][j].setDoorDirection(DoorDirection.LEFT);
+						}
+					}
+					else if (cellTypes.get(cellNum).charAt(0) == 'W') {
 						board[i][j].setType(BoardCell.CellType.WALKWAY);
-					} else {
+					}
+					else {
 						board[i][j].setType(BoardCell.CellType.ROOM);
 					}
 					
@@ -315,6 +318,7 @@ public class Board {
 	}
 	
 	public void dealCards(){
+		selectAnswer();
 		Collections.shuffle(cards);
 		Collections.shuffle(cards);
 		
