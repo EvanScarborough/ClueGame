@@ -54,7 +54,7 @@ public class Board {
 			Scanner scLegend = new Scanner(fileinLegend);
 			
 			cards = new ArrayList<Card>();
-			
+			 
 			while (scLegend.hasNextLine()) {
 				String str = scLegend.nextLine();
 				String[] lineArray = str.split(", ");
