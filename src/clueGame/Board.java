@@ -245,7 +245,18 @@ public class Board {
 	}
 
 	public void selectAnswer(){
+		theAnswer = new Solution("","","");
 		
+		Collections.shuffle(peopleCards);
+		Collections.shuffle(peopleCards);
+		Collections.shuffle(roomCards);
+		Collections.shuffle(roomCards);
+		Collections.shuffle(weaponCards);
+		Collections.shuffle(weaponCards);
+		
+		theAnswer.person = peopleCards.get(0).getName();
+		theAnswer.room = roomCards.get(0).getName();
+		theAnswer.weapon = weaponCards.get(0).getName();
 	}
 	
 	public Card handleSuggestion(int playerIndex, Solution s){
@@ -307,7 +318,7 @@ public class Board {
 		Collections.shuffle(cards);
 		Collections.shuffle(cards);
 		//System.out.println("cat");
-		theAnswer = new Solution("","","");
+		
 		
 		
 		int room = -1;
