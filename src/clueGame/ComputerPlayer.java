@@ -23,6 +23,7 @@ public class ComputerPlayer extends Player{
 			}
 		}
 		if(rooms.size() == 0){
+			//System.out.println(targets.size());
 			int randomIndex = rand.nextInt(targets.size());
 			for(BoardCell c: targets){
 				if(randomIndex == 0) return c;
