@@ -93,7 +93,7 @@ public class ClueGUI extends JPanel{
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("Clue Game");
-		frame.setSize(1000, 250);
+		frame.setSize(800, 250);
 		// Create the JPanel and add it to the JFrame
 		ClueGUI gui = new ClueGUI();
 		frame.add(gui, BorderLayout.CENTER);
