@@ -55,6 +55,8 @@ public class ComputerPlayer extends Player{
 		Random rand = new Random();
 		String roomsug = board.rooms.get(board.getCell(row, column).getInitial());
 		//System.out.println(roomsug);
-		return new Solution(people.get(rand.nextInt(people.size())).getName(),roomsug,weapons.get(rand.nextInt(weapons.size())).getName());
+		String person = people.get(rand.nextInt(people.size())).getName();
+		String weapon = weapons.get(rand.nextInt(weapons.size())).getName();
+		return new Solution(person,roomsug,weapon);
 	}
 }
