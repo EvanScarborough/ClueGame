@@ -1,10 +1,21 @@
 package clueGame;
+
+import java.awt.Color;
+import java.awt.Graphics;
+
 /**
  * 
  * @author Michael Balmes and Bixler Baker
  *
  */
 public class BoardCell{
+	
+	public static final int TILE_SIZE = 24;
+	public boolean hasTitle = false;
+	
+	
+	
+	
 	public enum CellType{
 		WALKWAY,ROOM,DOORWAY
 	}
@@ -16,12 +27,14 @@ public class BoardCell{
 		this.row = row;
 		this.column = column;
 		this.type=CellType.WALKWAY;
+		hasTitle = false;
 	}
 	
 	public BoardCell(int row, int column, CellType type) {
 		this.row = row;
 		this.column = column;
 		this.type = type;
+		hasTitle = false;
 	}
 	
 	public BoardCell(int row, int column, DoorDirection doorDirection) {
@@ -29,6 +42,7 @@ public class BoardCell{
 		this.column = column;
 		this.type = CellType.DOORWAY;
 		this.doorDirection=doorDirection;
+		hasTitle = false;
 	}
 	
 	public int Row() { return row; }
@@ -92,5 +106,41 @@ public class BoardCell{
 	
 	public void setDoorDirection(DoorDirection d) {
 		this.doorDirection = d;
+	}
+	
+	public void draw(Graphics g){
+		if(isWalkway()){
+			g.setColor(new Color(16,226,164));
+			g.fillRect(column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+			g.setColor(Color.BLACK);
+			g.drawRect(column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+			//System.out.println("cat");
+		}
+		if(hasTitle){
+			g.setColor(Color.WHITE);
+			g.drawString(Board.rooms.get(initial), column * TILE_SIZE, row * TILE_SIZE);
+		}
+		if(isDoorway()){
+			g.setColor(Color.WHITE);
+			switch(doorDirection){
+			case DOWN:
+				g.fillRect(column*TILE_SIZE, row * TILE_SIZE + 5*TILE_SIZE/6, TILE_SIZE, TILE_SIZE/6);
+				
+				break;
+			case UP:
+				g.fillRect(column*TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE/6);
+
+				break;
+			case LEFT:
+				g.fillRect(column*TILE_SIZE, row * TILE_SIZE, TILE_SIZE/6, TILE_SIZE);
+
+				break;
+			case RIGHT:
+				g.fillRect(column*TILE_SIZE + 5*TILE_SIZE/6, row * TILE_SIZE, TILE_SIZE/6, TILE_SIZE);
+
+				break;
+			}
+		}
+		
 	}
 }

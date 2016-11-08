@@ -1,5 +1,6 @@
 package clueGame;
 
+import java.awt.Graphics;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -10,7 +11,9 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
-public class Board {
+import javax.swing.JPanel;
+
+public class Board extends JPanel{
 	private static Board theInstance = new Board();
 	private static int numRows, numColumns;
 	private static BoardCell[][] board;
@@ -101,6 +104,7 @@ public class Board {
 						}
 						else if (cellTypes.get(cellNum).charAt(1) == 'N') {
 							board[i][j].setType(BoardCell.CellType.ROOM);
+							board[i][j].hasTitle = true;
 						}
 					}
 					else if (cellTypes.get(cellNum).charAt(0) == 'W') {
@@ -336,4 +340,19 @@ public class Board {
 			pgive++;
 		}
 	}
+
+
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+		for(int i = 0; i < numRows; i++){
+			for(int j = 0; j < numColumns; j++){
+				//System.out.println("cat");
+				getCell(i,j).draw(g);
+			}
+		}
+		for(int i = 0; i < players.size(); i++){
+			players.get(i).draw(g);
+		}
+	}
+	
 }
