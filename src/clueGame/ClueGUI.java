@@ -22,7 +22,7 @@ public class ClueGUI extends JPanel{
 	
 	public ClueGUI(){
 		// Create a layout with 2 rows
-		setLayout(new GridLayout(2,0));
+		setLayout(new GridLayout(2,1));
 		JPanel panel = createFirstRow();
 		add(panel);
 		panel = createSecondRow();
