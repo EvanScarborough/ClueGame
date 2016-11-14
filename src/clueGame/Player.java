@@ -66,7 +66,7 @@ public class Player {
 		myCards.add(c);
 	}
 	
-	
+	public Solution takeTurn(Set<BoardCell> targets){return null;}
 	
 	
 	

@@ -59,4 +59,19 @@ public class ComputerPlayer extends Player{
 		String weapon = weapons.get(rand.nextInt(weapons.size())).getName();
 		return new Solution(person,roomsug,weapon);
 	}
+	
+	
+	
+	
+	@Override
+	public Solution takeTurn(Set<BoardCell> targets){
+		BoardCell newCell = pickLocation(targets);
+		row = newCell.getRow();
+		column = newCell.getColumn();
+		if(newCell.isDoorway()){
+			lastVisited = newCell.getInitial();
+			return createSuggestion();
+		}
+		return null;
+	}
 }

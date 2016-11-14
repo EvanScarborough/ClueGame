@@ -14,4 +14,8 @@ public class Solution {
 	public boolean isSame(Solution s) {
 		return person.contains(s.person) && room.contains(s.room) && weapon.contains(s.weapon);
 	}
+	
+	public String toString(){
+		return person + " in the " + room + " with a(n) " + weapon;
+	}
 }

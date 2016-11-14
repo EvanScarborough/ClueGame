@@ -27,7 +27,7 @@ public class gameSetupTests {
 	public void testLoadPeople(){
 		assertTrue(board.players.size() == 6);
 		//Checks a few player names
-		assertTrue(board.players.get(0).getName().equals("Blaster the Burro"));
+		assertTrue(board.players.get(0).getName().equals("President Paul Johnson"));
 		assertTrue(board.players.get(3).getName().equals("Dr. Rader"));
 		//Checks a player's colors
 		assertTrue(board.players.get(5).getColor().getBlue() == 230);

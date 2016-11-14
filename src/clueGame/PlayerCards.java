@@ -17,7 +17,6 @@ public class PlayerCards extends JPanel{
 		add(makePanel(player, CardType.WEAPON));
 
 		setBorder(new TitledBorder (new EtchedBorder(), "My Cards"));
-
 	}
 	
 	private JPanel makePanel(Player player, CardType type) {

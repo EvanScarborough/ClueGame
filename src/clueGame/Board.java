@@ -1,6 +1,8 @@
 package clueGame;
 
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -8,9 +10,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class Board extends JPanel{
@@ -26,6 +31,7 @@ public class Board extends JPanel{
 	
 	public Solution theAnswer;
 	public ArrayList<Player> players;
+	public HumanPlayer human;
 	public ArrayList<Card> cards;
 	
 	public static ArrayList<Card> weaponCards;
@@ -33,8 +39,12 @@ public class Board extends JPanel{
 	public static ArrayList<Card> roomCards;
 	
 	public static int MAX_BOARD_SIZE = 0;
+	
+	public int activePlayer = 0;
 
-	private Board() {}
+	private Board() {
+		addMouseListener(new TargetListener());
+	}
 	
 	public static Board getInstance() { 
 		return theInstance; 	
@@ -123,6 +133,7 @@ public class Board extends JPanel{
 		} catch(FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		
 	}
 	
 	public Map<Character, String> getLegend() {
@@ -299,7 +310,10 @@ public class Board extends JPanel{
 			for(int i = 0; i < 6; i++){
 				String n = pfin.nextLine();
 				if(i!=0)players.add(new ComputerPlayer(n));
-				else players.add(new HumanPlayer(n));
+				else{
+					human = new HumanPlayer(n);
+					players.add(human);
+				}
 				peopleCards.add(new Card(n,CardType.PERSON));
 				cards.add(peopleCards.get(peopleCards.size()-1));
 			}
@@ -322,6 +336,9 @@ public class Board extends JPanel{
 		}catch(FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		
+		activePlayer = players.size() - 1;
+		
 	}
 	
 	public void dealCards(){
@@ -340,13 +357,83 @@ public class Board extends JPanel{
 			pgive++;
 		}
 	}
-
+	
+	Random rand = new Random();
+	public Solution mostRecentSolution;
+	public int roll;
+	
+	public void nextPlayer(){
+		activePlayer++;
+		if(activePlayer >= players.size()){
+			activePlayer = 0;
+		}
+		roll = rand.nextInt(6) + 1;
+		calcTargets(players.get(activePlayer).row,players.get(activePlayer).column,roll);
+		
+		if(activePlayer != 0){
+			mostRecentSolution = players.get(activePlayer).takeTurn(targets);
+		}
+		else{
+			human.isTurnDone = false;
+		}
+		
+		
+		repaint();
+	}
+	
+	public int mouseX = -1;
+	public int mouseY = -1;
+	public boolean targClick = false;
+	
+	public class TargetListener implements MouseListener {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			if(human.isTurnDone) return;
+			
+			int yp = e.getY() / BoardCell.TILE_SIZE;
+			int xp = e.getX() / BoardCell.TILE_SIZE;
+			
+			System.out.println(yp + " " + xp);
+			if(!isValid(yp,xp)){
+				return;
+			}
+			BoardCell clickedOn = getCell(yp, xp);
+			if(!targets.contains(clickedOn)){
+				JOptionPane.showMessageDialog(new JFrame(), "Invalit Target!!", "Select a target", JOptionPane.INFORMATION_MESSAGE);
+			}
+			else{
+				human.takeTurn(clickedOn);
+				human.isTurnDone = true;
+				repaint();
+			}
+		}
+		public void mousePressed(MouseEvent e) {			
+		}
+		public void mouseReleased(MouseEvent e) {			
+		}
+		public void mouseEntered(MouseEvent e) {			
+		}
+		public void mouseExited(MouseEvent e) {			
+		}
+		
+	}
+	
+	
+	
+	
+	
 
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		for(int i = 0; i < numRows; i++){
 			for(int j = 0; j < numColumns; j++){
 				//System.out.println("cat");
+				if(!human.isTurnDone && targets.contains(getCell(i,j))){
+					getCell(i,j).isTarget = true;
+				}
+				else{
+					getCell(i,j).isTarget = false;
+				}
 				getCell(i,j).draw(g);
 			}
 		}

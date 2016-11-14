@@ -108,9 +108,11 @@ public class BoardCell{
 		this.doorDirection = d;
 	}
 	
+	public boolean isTarget = false;
 	public void draw(Graphics g){
 		if(isWalkway()){
 			g.setColor(new Color(16,226,164));
+			if(isTarget) g.setColor(new Color(0,150,164));
 			g.fillRect(column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 			g.setColor(Color.BLACK);
 			g.drawRect(column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
@@ -121,6 +123,12 @@ public class BoardCell{
 			g.drawString(Board.rooms.get(initial), column * TILE_SIZE, row * TILE_SIZE);
 		}
 		if(isDoorway()){
+			if(isTarget){
+				g.setColor(new Color(0,150,164));
+				g.fillRect(column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+				g.setColor(Color.BLACK);
+				g.drawRect(column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+			}
 			g.setColor(Color.WHITE);
 			switch(doorDirection){
 			case DOWN:

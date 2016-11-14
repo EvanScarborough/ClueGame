@@ -28,13 +28,14 @@ public class ClueGame extends JFrame{
 		board.initialize();
 		board.loadConfigFiles("data/CluePlayers.txt", "data/ClueWeapons.txt");
 		board.dealCards();
+		//board.nextPlayer();
 		board.setBackground(Color.BLACK);
 		add(board, BorderLayout.CENTER);
-		
+		board.nextPlayer();
 		width = BoardCell.TILE_SIZE * board.getNumColumns();
 		height = BoardCell.TILE_SIZE * board.getNumRows();
 		
-		setPreferredSize(new Dimension(width + BoardCell.TILE_SIZE * 11,height + BoardCell.TILE_SIZE * 8));
+		setPreferredSize(new Dimension(width + BoardCell.TILE_SIZE * 12,height + BoardCell.TILE_SIZE * 8));
 		
 		ClueGUI gui = new ClueGUI();
 		add(gui, BorderLayout.SOUTH);

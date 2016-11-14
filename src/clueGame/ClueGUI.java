@@ -3,10 +3,13 @@ package clueGame;
 import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
@@ -18,7 +21,7 @@ public class ClueGUI extends JPanel{
     private JTextField roll;
     private JTextField guesstext;
     private JTextField response;
-	
+	Board board = Board.getInstance();
 	
 	public ClueGUI(){
 		// Create a layout with 2 rows
@@ -32,6 +35,7 @@ public class ClueGUI extends JPanel{
 	
 	 private JPanel createFirstRow() {
 		JButton next = new JButton("Next Player");
+		next.addActionListener(new ButtonListener());
 		JButton accusation = new JButton("Make an accusation");
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(1,3));
@@ -42,6 +46,7 @@ public class ClueGUI extends JPanel{
 		
 		name = new JTextField(20);
 		name.setEditable(false);
+		name.setText(board.players.get(board.activePlayer).getName());
 		whoseturn.add(nameLabel);
 		whoseturn.add(name);
 		
@@ -60,6 +65,7 @@ public class ClueGUI extends JPanel{
 		dieJPanel.setLayout(new GridLayout(1,2));
 		roll = new JTextField(2);
 		roll.setEditable(false);
+		roll.setText(Integer.toString(board.roll));
 		dieJPanel.add(nameLabel);
 		dieJPanel.add(roll);
 		dieJPanel.setBorder(new TitledBorder (new EtchedBorder(), "Die"));
@@ -78,7 +84,7 @@ public class ClueGUI extends JPanel{
 		JLabel guessresLabel = new JLabel("Response");
 		
 		JPanel guessresJPanel = new JPanel();
-		guessresJPanel.setLayout(new GridLayout(1,2));
+		//guessresJPanel.setLayout(new GridLayout(1,2));
 		response = new JTextField(15);
 		response.setEditable(false);
 		guessresJPanel.add(guessresLabel);
@@ -90,7 +96,22 @@ public class ClueGUI extends JPanel{
 	}
 	
 	
-	
+	private class ButtonListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if((board.activePlayer == 0 && board.human.isTurnDone) || board.activePlayer != 0) {
+				board.nextPlayer();
+				roll.setText(Integer.toString(board.roll));
+				name.setText(board.players.get(board.activePlayer).getName());
+				if(board.mostRecentSolution != null){
+					guesstext.setText(board.mostRecentSolution.toString());
+				}
+			}
+			else{
+				JOptionPane.showMessageDialog(new JFrame(), "Finish your turn!!", "Select a target", JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
+	}
 	
 	
 }
