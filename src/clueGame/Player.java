@@ -14,6 +14,7 @@ public class Player {
 	protected int row;
 	protected int column;
 	protected Color color;
+	public Solution accusation = null; 
 	
 	protected Set<Card> myCards;
 	

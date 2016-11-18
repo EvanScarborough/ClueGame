@@ -41,6 +41,9 @@ public class Board extends JPanel{
 	public static int MAX_BOARD_SIZE = 0;
 	
 	public int activePlayer = 0;
+	
+	static boolean isRealGame = false;
+	static boolean gameFinished = false;
 
 	private Board() {
 		addMouseListener(new TargetListener());
@@ -264,7 +267,7 @@ public class Board extends JPanel{
 	public void calcTargets(int i, int j, int k) {
 		calcTargets(board[i][j],k);
 	}
-
+	
 	public void selectAnswer(){
 		theAnswer = new Solution("","","");
 		
@@ -278,6 +281,13 @@ public class Board extends JPanel{
 		theAnswer.person = peopleCards.get(0).getName();
 		theAnswer.room = roomCards.get(0).getName();
 		theAnswer.weapon = weaponCards.get(0).getName();
+		
+		Collections.shuffle(peopleCards);
+		Collections.shuffle(peopleCards);
+		Collections.shuffle(roomCards);
+		Collections.shuffle(roomCards);
+		Collections.shuffle(weaponCards);
+		Collections.shuffle(weaponCards);
 	}
 	
 	public Card handleSuggestion(int playerIndex, Solution s){
@@ -290,6 +300,8 @@ public class Board extends JPanel{
 				return c;
 			}
 		}
+		mostRecentDisprove = "Nobody can disprove!";
+		if(isRealGame) ClueGUI.response.setText("Nobody can disprove!");
 		return null;
 	}
 	
@@ -360,6 +372,7 @@ public class Board extends JPanel{
 	
 	Random rand = new Random();
 	public Solution mostRecentSolution;
+	public String mostRecentDisprove = "";
 	public int roll;
 	
 	public void nextPlayer(){
@@ -371,14 +384,50 @@ public class Board extends JPanel{
 		calcTargets(players.get(activePlayer).row,players.get(activePlayer).column,roll);
 		
 		if(activePlayer != 0){
+			if(players.get(activePlayer).accusation != null){
+				handleAccusation();
+				players.get(activePlayer).accusation = null;
+				return;
+				//String end = "GAME OVER!\n" + players.get(activePlayer).getName() + " won the game. The answer was\n" + theAnswer.toString();
+				//JOptionPane.showMessageDialog(new JFrame(), end, "Game Finished", JOptionPane.INFORMATION_MESSAGE);
+			}
+			
 			mostRecentSolution = players.get(activePlayer).takeTurn(targets);
+			if(mostRecentSolution != null){
+				teleportPlayer();
+			}
 		}
 		else{
-			human.isTurnDone = false;
+			human.turnState = 1;
 		}
 		
 		
 		repaint();
+	}
+	
+	void handleAccusation(){
+		String accus = players.get(activePlayer).getName() + " made an accusation:\n" + players.get(activePlayer).accusation.toString();
+		JOptionPane.showMessageDialog(new JFrame(), accus, "Accusation", JOptionPane.INFORMATION_MESSAGE);
+		if(checkAccusation(players.get(activePlayer).accusation)){
+			String end = "GAME OVER!\n" + players.get(activePlayer).getName() + " won the game. The answer was\n" + theAnswer.toString();
+			JOptionPane.showMessageDialog(new JFrame(), end, "Game Finished", JOptionPane.INFORMATION_MESSAGE);
+			gameFinished = true;
+			setVisible(false);
+		}
+	}
+	
+	void handleAccusation(Solution solution){
+		if(checkAccusation(solution)){
+			String end = "YOU WIN!\nYou guessed correctly! The answer was\n" + theAnswer.toString();
+			JOptionPane.showMessageDialog(new JFrame(), end, "Game Finished", JOptionPane.INFORMATION_MESSAGE);
+			gameFinished = true;
+			setVisible(false);
+		}
+		else{
+			String end = "That isn't correct.";
+			JOptionPane.showMessageDialog(new JFrame(), end, "Nope", JOptionPane.INFORMATION_MESSAGE);
+			repaint();
+		}
 	}
 	
 	public int mouseX = -1;
@@ -388,12 +437,12 @@ public class Board extends JPanel{
 	public class TargetListener implements MouseListener {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			if(human.isTurnDone) return;
+			if(human.turnState == 0) return;
 			
 			int yp = e.getY() / BoardCell.TILE_SIZE;
 			int xp = e.getX() / BoardCell.TILE_SIZE;
 			
-			System.out.println(yp + " " + xp);
+			//System.out.println(yp + " " + xp);
 			if(!isValid(yp,xp)){
 				return;
 			}
@@ -402,22 +451,43 @@ public class Board extends JPanel{
 				JOptionPane.showMessageDialog(new JFrame(), "Invalit Target!!", "Select a target", JOptionPane.INFORMATION_MESSAGE);
 			}
 			else{
-				human.takeTurn(clickedOn);
-				human.isTurnDone = true;
+				if(human.takeTurn(clickedOn)) human.turnState = 2;
+				else human.turnState = 0;
 				repaint();
+				
 			}
 		}
-		public void mousePressed(MouseEvent e) {			
-		}
-		public void mouseReleased(MouseEvent e) {			
-		}
-		public void mouseEntered(MouseEvent e) {			
-		}
-		public void mouseExited(MouseEvent e) {			
-		}
+		public void mousePressed(MouseEvent e) {}
+		public void mouseReleased(MouseEvent e) {}
+		public void mouseEntered(MouseEvent e) {}
+		public void mouseExited(MouseEvent e) {}
 		
 	}
 	
+	public void teleportPlayer(){
+		Card c = handleSuggestion(activePlayer, mostRecentSolution);
+		if(c != null){
+			mostRecentDisprove = c.getName();
+			for(Player p: players){
+				p.giveCard(c);
+				if(p.getName().equals(mostRecentSolution.person)){
+					p.setPosition(players.get(activePlayer).row, players.get(activePlayer).column);
+				}
+			}
+		}
+		else{
+			ClueGUI.response.setText("Nobody can disprove!");
+			if(activePlayer != 0 && checkAccusation(mostRecentSolution)){
+				players.get(activePlayer).accusation = mostRecentSolution;
+				//String end = "GAME OVER!\n" + players.get(activePlayer).getName() + " won the game. The answer was\n" + theAnswer.toString();
+				//JOptionPane.showMessageDialog(new JFrame(), end, "Game Finished", JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
+		ClueGUI.response.setText(mostRecentDisprove);
+		
+		
+		repaint();
+	}
 	
 	
 	
@@ -428,7 +498,7 @@ public class Board extends JPanel{
 		for(int i = 0; i < numRows; i++){
 			for(int j = 0; j < numColumns; j++){
 				//System.out.println("cat");
-				if(!human.isTurnDone && targets.contains(getCell(i,j))){
+				if(human.turnState == 1 && targets.contains(getCell(i,j))){
 					getCell(i,j).isTarget = true;
 				}
 				else{

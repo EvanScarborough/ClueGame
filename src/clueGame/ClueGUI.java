@@ -19,8 +19,8 @@ public class ClueGUI extends JPanel{
 	
 	private JTextField name;
     private JTextField roll;
-    private JTextField guesstext;
-    private JTextField response;
+    static JTextField guesstext;
+    static JTextField response;
 	Board board = Board.getInstance();
 	
 	public ClueGUI(){
@@ -37,6 +37,7 @@ public class ClueGUI extends JPanel{
 		JButton next = new JButton("Next Player");
 		next.addActionListener(new ButtonListener());
 		JButton accusation = new JButton("Make an accusation");
+		accusation.addActionListener(new AccusationListener());
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(1,3));
 		JLabel nameLabel = new JLabel("Whose Turn?");
@@ -96,20 +97,38 @@ public class ClueGUI extends JPanel{
 	}
 	
 	
-	private class ButtonListener implements ActionListener{
+	class ButtonListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if((board.activePlayer == 0 && board.human.isTurnDone) || board.activePlayer != 0) {
+			if(Board.gameFinished){
+				JOptionPane.showMessageDialog(new JFrame(), "The game is finished!!\nClose the game and re-open to play again.", "GAME OVER", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			if((board.activePlayer == 0 && board.human.turnState == 0) || board.activePlayer != 0) {
 				board.nextPlayer();
 				roll.setText(Integer.toString(board.roll));
 				name.setText(board.players.get(board.activePlayer).getName());
 				if(board.mostRecentSolution != null){
 					guesstext.setText(board.mostRecentSolution.toString());
+					response.setText(board.mostRecentDisprove);
 				}
 			}
 			else{
-				JOptionPane.showMessageDialog(new JFrame(), "Finish your turn!!", "Select a target", JOptionPane.INFORMATION_MESSAGE);
+				if(board.human.turnState == 1) JOptionPane.showMessageDialog(new JFrame(), "Finish your turn!!", "Select a target", JOptionPane.INFORMATION_MESSAGE);
+				else JOptionPane.showMessageDialog(new JFrame(), "Finish your turn!!", "Make a suggestion", JOptionPane.INFORMATION_MESSAGE);
 			}
+		}
+	}
+	
+	class AccusationListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(board.human.turnState != 1){
+				JOptionPane.showMessageDialog(new JFrame(), "Wait until the beginning of your turn to accuse.", "Can't Accuse Now", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			AccusationPopup accuse = new AccusationPopup();
+			accuse.setVisible(true);
 		}
 	}
 	

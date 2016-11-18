@@ -18,8 +18,12 @@ public class ComputerPlayer extends Player{
 		for(BoardCell c: targets){
 			//System.out.println(c.Row() + "  " + c.Column());
 			if(c.isDoorway() && c.getInitial() != lastVisited){
-				rooms.add(c);
-				//System.out.println("jfalksjdfklajsdklfjaksldjflkasjdf");
+				boolean haveThatCard = false;
+				for(Card r: myCards){
+					if(r.getName().equals(Board.rooms.get(c.getInitial()))) haveThatCard = true;
+				}
+				if(!haveThatCard) rooms.add(c);
+				else if(rand.nextBoolean() || !Board.isRealGame) rooms.add(c);
 			}
 		}
 		if(rooms.size() == 0){
@@ -41,7 +45,7 @@ public class ComputerPlayer extends Player{
 	public Solution makeAccusation(){
 		return null;
 	}
-
+	
 	public Solution createSuggestion(){
 		Board board = Board.getInstance();
 		ArrayList<Card> people = new ArrayList<Card>();

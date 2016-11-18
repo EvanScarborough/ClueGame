@@ -17,6 +17,7 @@ public class ClueGame extends JFrame{
 	int width;
 	int height;
 	Player player;
+	DetectiveNotes notes;
 
 	public ClueGame(){
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -24,6 +25,7 @@ public class ClueGame extends JFrame{
 		//setSize(800, 250);
 		
 		board = Board.getInstance();
+		Board.isRealGame = true;
 		board.setConfigFiles("data/BBMB_ClueLayout.csv", "data/BBMB_ClueLegend.txt");
 		board.initialize();
 		board.loadConfigFiles("data/CluePlayers.txt", "data/ClueWeapons.txt");
@@ -53,6 +55,7 @@ public class ClueGame extends JFrame{
 		setJMenuBar(menuBar);
 		menuBar.add(createFileMenu());
 		
+		notes = new DetectiveNotes();
 		
 		
 	}
@@ -83,7 +86,6 @@ public class ClueGame extends JFrame{
 		class MenuItemListener implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e){
-				DetectiveNotes notes = new DetectiveNotes();
 				notes.setVisible(true);
 			} 
 		}
